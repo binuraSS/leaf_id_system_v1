@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌿 Leaf Analysis Report</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 40px;
+            color: #1a1a1a;
+        }
+        
+        .report-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+        }
+        
+        .report-header {
+            text-align: center;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #e8f5e9;
+            margin-bottom: 30px;
+        }
+        
+        .report-header .logo {
+            font-size: 48px;
+            margin-bottom: 8px;
+        }
+        
+        .report-header h1 {
+            font-size: 28px;
+            color: #1b5e20;
+            margin: 0;
+        }
+        
+        .report-header .subtitle {
+            color: #666;
+            margin-top: 4px;
+        }
+        
+        .report-header .timestamp {
+            color: #999;
+            font-size: 13px;
+            margin-top: 8px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1b5e20;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e8f5e9;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .summary-item {
+            background: #f8faf8;
+            padding: 16px 20px;
+            border-radius: 10px;
+            border-left: 4px solid #2e7d32;
+        }
+        
+        .summary-item .label {
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        .summary-item .value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-top: 4px;
+        }
+        
+        .summary-item .value.healthy {
+            color: #2e7d32;
+        }
+        
+        .summary-item .value.warning {
+            color: #f9a825;
+        }
+        
+        .summary-item .value.danger {
+            color: #c62828;
+        }
+        
+        .metrics-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+        }
+        
+        .metrics-table th {
+            background: #e8f5e9;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            color: #1b5e20;
+            border-bottom: 2px solid #a5d6a7;
+        }
+        
+        .metrics-table td {
+            padding: 10px 16px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .metrics-table tr:hover {
+            background: #f5faf5;
+        }
+        
+        .recommendations {
+            background: #e3f2fd;
+            border-radius: 10px;
+            padding: 20px 24px;
+            margin-top: 10px;
+        }
+        
+        .recommendations h4 {
+            color: #0d47a1;
+            margin-bottom: 8px;
+        }
+        
+        .recommendations ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .recommendations li {
+            margin: 4px 0;
+            color: #333;
+        }
+        
+        .images-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 16px;
+        }
+        
+        .image-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #fafafa;
+        }
+        
+        .image-card img {
+            width: 100%;
+            display: block;
+            max-height: 400px;
+            object-fit: contain;
+        }
+        
+        .image-card .caption {
+            padding: 12px 16px;
+            font-weight: 600;
+            color: #555;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .report-footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e8f5e9;
+            text-align: center;
+            color: #999;
+            font-size: 13px;
+        }
+        
+        .print-btn {
+            background: #2e7d32;
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background 0.3s;
+        }
+        
+        .print-btn:hover {
+            background: #1b5e20;
+        }
+        
+        @media print {
+            .print-btn {
+                display: none;
+            }
+            body {
+                background: white;
+                padding: 20px;
+            }
+            .report-container {
+                box-shadow: none;
+                padding: 20px;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            body {
+                padding: 16px;
+            }
+            .report-container {
+                padding: 20px;
+            }
+            .summary-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .images-section {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="report-container" id="reportContainer">
+        <!-- Header -->
+        <div class="report-header">
+            <div class="logo">🌿</div>
+            <h1>Leaf Analysis Report</h1>
+            <p class="subtitle">Comprehensive leaf health and disease assessment</p>
+            <p class="timestamp" id="timestamp"></p>
+        </div>
+        
+        <!-- Summary -->
+        <div class="section">
+            <h2 class="section-title">📊 Summary</h2>
+            <div class="summary-grid" id="summaryGrid">
+                <!-- Populated by JavaScript -->
+            </div>
+        </div>
+        
+        <!-- Detailed Metrics -->
+        <div class="section">
+            <h2 class="section-title">📈 Detailed Metrics</h2>
+            <table class="metrics-table" id="metricsTable">
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Value</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="metricsBody">
+                    <!-- Populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Disease Details -->
+        <div class="section" id="diseaseSection">
+            <h2 class="section-title">🦠 Disease Analysis</h2>
+            <div id="diseaseDetails">
+                <!-- Populated by JavaScript -->
+            </div>
+        </div>
+        
+        <!-- Morphology -->
+        <div class="section" id="morphologySection">
+            <h2 class="section-title">📏 Morphology</h2>
+            <div id="morphologyDetails">
+                <!-- Populated by JavaScript -->
+            </div>
+        </div>
+        
+        <!-- Recommendations -->
+        <div class="section" id="recommendationsSection">
+            <h2 class="section-title">💡 Recommendations</h2>
+            <div class="recommendations" id="recommendations">
+                <!-- Populated by JavaScript -->
+            </div>
+        </div>
+        
+        <!-- Images -->
+        <div class="section">
+            <h2 class="section-title">🖼️ Visualizations</h2>
+            <div class="images-section" id="imagesSection">
+                <!-- Populated by JavaScript -->
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="report-footer">
+            <p>Generated by Leaf ID System • Powered by YOLO + SAM + Computer Vision</p>
+        </div>
+        
+        <!-- Print Button -->
+        <div style="text-align: center;">
+            <button class="print-btn" onclick="window.print()">🖨️ Print / Save PDF</button>
+        </div>
+    </div>
+    
+    <script>
+        // Get data from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const dataParam = urlParams.get('data');
+        
+        let reportData = null;
+        
+        if (dataParam) {
+            try {
+                reportData = JSON.parse(decodeURIComponent(dataParam));
+            } catch (e) {
+                console.error('Failed to parse report data:', e);
+            }
+        }
+        
+        // If no data provided, use sample data
+        if (!reportData) {
+            reportData = getSampleData();
+        }
+        
+        // Render report
+        renderReport(reportData);
+        
+        function renderReport(data) {
+            // Set timestamp
+            document.getElementById('timestamp').textContent = 'Generated: ' + new Date(data.timestamp || Date.now()).toLocaleString();
+            
+            // Summary
+            renderSummary(data);
+            
+            // Metrics
+            renderMetrics(data);
+            
+            // Disease
+            renderDisease(data);
+            
+            // Morphology
+            renderMorphology(data);
+            
+            // Recommendations
+            renderRecommendations(data);
+            
+            // Images
+            renderImages(data);
+        }
+        
+        function renderSummary(data) {
+            const grid = document.getElementById('summaryGrid');
+            
+            const summaryItems = [];
+            
+            if (data.health) {
+                const score = data.health.score || 0;
+                const scoreClass = score >= 80 ? 'healthy' : score >= 50 ? 'warning' : 'danger';
+                summaryItems.push({
+                    label: 'Health Score',
+                    value: score.toFixed(1) + '%',
+                    valueClass: scoreClass
+                });
+                
+                summaryItems.push({
+                    label: 'Nitrogen Status',
+                    value: data.health.nitrogen_status || 'Unknown'
+                });
+                
+                summaryItems.push({
+                    label: 'Stress Level',
+                    value: data.health.stress_level || 'Unknown'
+                });
+            }
+            
+            if (data.quality) {
+                summaryItems.push({
+                    label: 'Quality Grade',
+                    value: data.quality.grade || 'F'
+                });
+            }
+            
+            if (data.disease) {
+                const statusColor = data.disease.status === 'Healthy' ? 'healthy' : 'danger';
+                summaryItems.push({
+                    label: 'Disease Status',
+                    value: data.disease.status || 'Unknown',
+                    valueClass: statusColor
+                });
+            }
+            
+            grid.innerHTML = summaryItems.map(item => `
+                <div class="summary-item">
+                    <div class="label">${item.label}</div>
+                    <div class="value ${item.valueClass || ''}">${item.value}</div>
+                </div>
+            `).join('');
+        }
+        
+        function renderMetrics(data) {
+            const tbody = document.getElementById('metricsBody');
+            
+            const metrics = [];
+            
+            // Health metrics
+            if (data.health) {
+                metrics.push({ metric: 'Health Score', value: (data.health.score || 0).toFixed(1) + '%', status: '✅ Good' });
+                metrics.push({ metric: 'Nitrogen Status', value: data.health.nitrogen_status || 'Unknown', status: '' });
+                metrics.push({ metric: 'Stress Level', value: data.health.stress_level || 'Unknown', status: '' });
+            }
+            
+            // Disease metrics
+            if (data.disease) {
+                metrics.push({ metric: 'Disease Status', value: data.disease.status || 'Healthy', status: data.disease.status === 'Healthy' ? '✅' : '⚠️' });
+                metrics.push({ metric: 'Chlorosis', value: (data.disease.chlorosis || 0).toFixed(1) + '%', status: data.disease.chlorosis > 10 ? '⚠️' : '✅' });
+                metrics.push({ metric: 'Necrosis', value: (data.disease.necrosis || 0).toFixed(1) + '%', status: data.disease.necrosis > 10 ? '⚠️' : '✅' });
+                metrics.push({ metric: 'Spots', value: data.disease.spots || 0, status: data.disease.spots > 5 ? '⚠️' : '✅' });
+            }
+            
+            // Quality metrics
+            if (data.quality) {
+                metrics.push({ metric: 'Quality Grade', value: data.quality.grade || 'F', status: data.quality.grade >= 'B' ? '✅' : '⚠️' });
+            }
+            
+            tbody.innerHTML = metrics.map(m => `
+                <tr>
+                    <td>${m.metric}</td>
+                    <td><strong>${m.value}</strong></td>
+                    <td>${m.status || ''}</td>
+                </tr>
+            `).join('');
+        }
+        
+        function renderDisease(data) {
+            const container = document.getElementById('diseaseDetails');
+            
+            if (!data.disease) {
+                container.innerHTML = '<p>No disease analysis available</p>';
+                return;
+            }
+            
+            const disease = data.disease;
+            
+            container.innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 12px;">
+                    <div style="background: #f5f5f5; padding: 12px 16px; border-radius: 8px;">
+                        <div style="font-size: 12px; color: #888;">Status</div>
+                        <div style="font-size: 18px; font-weight: 600; color: ${disease.status === 'Healthy' ? '#2e7d32' : '#c62828'};">${disease.status}</div>
+                    </div>
+                    <div style="background: #f5f5f5; padding: 12px 16px; border-radius: 8px;">
+                        <div style="font-size: 12px; color: #888;">Chlorosis</div>
+                        <div style="font-size: 18px; font-weight: 600;">${(disease.chlorosis || 0).toFixed(1)}%</div>
+                    </div>
+                    <div style="background: #f5f5f5; padding: 12px 16px; border-radius: 8px;">
+                        <div style="font-size: 12px; color: #888;">Necrosis</div>
+                        <div style="font-size: 18px; font-weight: 600;">${(disease.necrosis || 0).toFixed(1)}%</div>
+                    </div>
+                    <div style="background: #f5f5f5; padding: 12px 16px; border-radius: 8px;">
+                        <div style="font-size: 12px; color: #888;">Spots</div>
+                        <div style="font-size: 18px; font-weight: 600;">${disease.spots || 0}</div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function renderMorphology(data) {
+            const container = document.getElementById('morphologyDetails');
+            
+            if (!data.morphology) {
+                container.innerHTML = '<p>No morphology data available</p>';
+                return;
+            }
+            
+            const m = data.morphology;
+            
+            container.innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px;">
+                    <div style="background: #f5f5f5; padding: 12px 16px; border-radius: 8px;">
+                        <div style="font-size: 12px; color: #888;">Area</div>
+                        <div style="font-size: 18px; font-weight: 600;">${(m.area_pixels || 0).toFixed(0)} px²</div>
+                    </div>
+                    <div style="background: #f5f5f5; padding: 12px 16px; border-radius: 8px;">
+                        <div style="font-size: 12px; color: #888;">Perimeter</div>
+                        <div style="font-size: 18px; font-weight: 600;">${(m.perimeter_pixels || 0).toFixed(1)} px</div>
+                    </div>
+                    <div style="background: #f5f5f5; padding: 12px 16px; border-radius: 8px;">
+                        <div style="font-size: 12px; color: #888;">Aspect Ratio</div>
+                        <div style="font-size: 18px; font-weight: 600;">${(m.aspect_ratio || 0).toFixed(2)}</div>
+                    </div>
+                    <div style="background: #f5f5f5; padding: 12px 16px; border-radius: 8px;">
+                        <div style="font-size: 12px; color: #888;">Circularity</div>
+                        <div style="font-size: 18px; font-weight: 600;">${(m.circularity || 0).toFixed(3)}</div>
+                    </div>
+                    <div style="background: #f5f5f5; padding: 12px 16px; border-radius: 8px;">
+                        <div style="font-size: 12px; color: #888;">Solidity</div>
+                        <div style="font-size: 18px; font-weight: 600;">${(m.solidity || 0).toFixed(3)}</div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function renderRecommendations(data) {
+            const container = document.getElementById('recommendations');
+            
+            let recommendations = [];
+            
+            if (data.disease && data.disease.recommendations) {
+                recommendations = data.disease.recommendations;
+            }
+            
+            if (recommendations.length === 0) {
+                recommendations = ['No specific recommendations at this time.'];
+            }
+            
+            container.innerHTML = `
+                <h4>💡 Based on the analysis:</h4>
+                <ul>
+                    ${recommendations.map(r => `<li>${r}</li>`).join('')}
+                </ul>
+            `;
+        }
+        
+        function renderImages(data) {
+            const container = document.getElementById('imagesSection');
+            
+            let html = '';
+            
+            if (data.leaf_image) {
+                html += `
+                    <div class="image-card">
+                        <img src="data:image/jpeg;base64,${data.leaf_image}" alt="Isolated Leaf">
+                        <div class="caption">🌱 Isolated Leaf</div>
+                    </div>
+                `;
+            }
+            
+            if (data.mask) {
+                html += `
+                    <div class="image-card">
+                        <img src="data:image/jpeg;base64,${data.mask}" alt="Segmentation Mask">
+                        <div class="caption">🎭 Segmentation Mask</div>
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = html || '<p>No images available</p>';
+        }
+        
+        function getSampleData() {
+            return {
+                timestamp: Date.now(),
+                health: {
+                    score: 85.5,
+                    nitrogen_status: 'Optimal',
+                    stress_level: 'Low'
+                },
+                quality: {
+                    grade: 'B'
+                },
+                disease: {
+                    status: 'Healthy',
+                    chlorosis: 3.2,
+                    necrosis: 1.5,
+                    spots: 2,
+                    recommendations: [
+                        'Continue regular monitoring',
+                        'Maintain optimal watering schedule',
+                        'Apply balanced fertilizer monthly'
+                    ]
+                },
+                morphology: {
+                    area_pixels: 45230,
+                    perimeter_pixels: 892.4,
+                    aspect_ratio: 1.85,
+                    circularity: 0.714,
+                    solidity: 0.923
+                }
+            };
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+# config/models.yaml
+# Model configuration file
+
+models:
+  yolo:
+    model_path: "models/yolov8n.pt"
+    confidence_threshold: 0.25
+    iou_threshold: 0.45
+    max_detections: 100
+  
+  sam:
+    model_path: "models/sam2.1_t.pt"
+    confidence_threshold: 0.5
+    iou_threshold: 0.9
+  
+  species:
+    model_path: "models/species_model.pkl"
+    enabled: false
+
+analysis:
+  color:
+    mode: "hybrid"  # fast, hybrid, detailed
+    enabled: true
+  
+  disease:
+    enabled: true
+    min_spot_area: 50
+    chlorosis_threshold: 30
+    necrosis_threshold: 40
+  
+  morphology:
+    enabled: true
+    pixel_to_cm: 0.01
+  
+  quality:
+    enabled: true
+
+app:
+  server:
+    host: "0.0.0.0"
+    port: 8000
+    debug: true
+  
+  cors:
+    allow_origins: ["*"]
+  
+  upload:
+    max_size_mb: 50
+    allowed_extensions: [".jpg", ".jpeg", ".png", ".bmp", ".tiff", ".webp"]
